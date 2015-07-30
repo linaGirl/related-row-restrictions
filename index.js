@@ -1,5 +1,5 @@
 !function() {
 
-	module.exports = require('./lib/RelatedRowRestrictions');
+	module.exports = require('./lib/Extension');
 
 }();
