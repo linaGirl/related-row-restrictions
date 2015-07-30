@@ -236,10 +236,12 @@
 					, value: 1
 					, nullable: true
 				}]
-			}).find().then(function(venues) { log(venues);
+			}).find().then(function(venues) {
 
 				if (venues.some(function(venue) {
-					return venue.event.id_tenant !== 1 && venue.event.id_tenant !== null;
+					return venue.event.some(function(evt) {
+						return evt.id_tenant !== 1 && evt.id_tenant !== null;
+					});
 				})) {
 					throw new Error('invalid tenant id!');
 				}
