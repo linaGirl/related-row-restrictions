@@ -225,4 +225,25 @@
 				done();
 			}).catch(done);
 		});
+
+
+		it('Filtering by constant (nullable) on another entity', function(done) {
+			db.venue('*').fetchEvent('*')
+			.restrict({
+				'event.id_tenant': [{
+					  type: 'constant'
+					, operator: 'equal'
+					, value: 1
+					, nullable: true
+				}]
+			}).find().then(function(venues) { log(venues);
+
+				if (venues.some(function(venue) {
+					return venue.event.id_tenant !== 1 && venue.event.id_tenant !== null;
+				})) {
+					throw new Error('invalid tenant id!');
+				}
+				done();
+			}).catch(done);
+		});
 	});
