@@ -266,6 +266,7 @@
 					  type: 'constant'
 					, operator: 'equal'
 					, value: 1
+					, global: true
 					, nullable: false
 				}]
 			}).find().then(function(venues) {
