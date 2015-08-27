@@ -15,23 +15,32 @@
         var db = related.related_restrictions_test;
 
 
-        db.venue('*').fetchEvent('*')
-        .restrict({
-            'event.id_tenant': [{
-                  type: 'constant'
-                , operator: 'equal'
-                , value: 1
-                , nullable: true
-            }]
-        }).find().then(function(venues) {
+        var restricitonSet = {
+            get: function(entityName) {
 
-            if (venues.some(function(venue) {
-                return venue.event.some(function(evt) {
-                    return evt.id_tenant !== 1 && evt.id_tenant !== null;
-                });
-            })) {
-                throw new Error('invalid tenant id!');
+                if (entityName === 'venue') {
+                    return [{
+                          type: 'constant'
+                        , column: 'id_tenant'
+                        , path: 'event'
+                        , fullPath: 'event.id_tenant'
+                        , operator: 'equal'
+                        , value: 1
+                        , nullable: false
+                        , global: false
+                    }];
+                } 
+                else return [];
             }
 
+
+            , getGlobal: function() {
+                return [];
+            }
+        };
+
+
+        db.venue('*').fetchEvent('*').restrict(restricitonSet).find().then(function(venues) { 
+            log(venues);
         }).catch(log);
     }).catch(log);
