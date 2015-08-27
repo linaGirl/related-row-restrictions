@@ -1,7 +1,7 @@
 {
       "name"                        : "related-row-restrictions"
     , "description"                 : "Enforce filters on queries"
-    , "version"                     : "0.1.5"
+    , "version"                     : "0.1.6"
     , "homepage"                    : "https://github.com/eventEmitter/related-row-restrictions"
     , "author"                      : "Michael van der Weg <michael@joinbox.com> (http://joinbox.com/)"
     , "license"                     : "MIT"

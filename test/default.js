@@ -251,4 +251,33 @@
 				done();
 			}).catch(done);
 		});
+
+
+		it('Filtering by constant (nullable) on another entity and one on the local entity that is global', function(done) {
+			db.venue('*').fetchEvent('*')
+			.restrict({
+				'event.id_tenant': [{
+					  type: 'constant'
+					, operator: 'equal'
+					, value: 1
+					, nullable: true
+				}]
+				, id_tenant: [{
+					  type: 'constant'
+					, operator: 'equal'
+					, value: 1
+					, nullable: false
+				}]
+			}).find().then(function(venues) {
+
+				if (venues.some(function(venue) {
+					return venue.event.some(function(evt) {
+						return evt.id_tenant !== 1 && evt.id_tenant !== null;
+					});
+				})) {
+					throw new Error('invalid tenant id!');
+				}
+				done();
+			}).catch(done);
+		});
 	});
