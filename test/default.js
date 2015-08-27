@@ -97,6 +97,7 @@
 	};
 
 
+
 	describe('The Row Restrictions Extension', function() {
 		var oldDate;
 
@@ -115,6 +116,7 @@
 			db = related.related_restrictions_test;
 		});
 	});
+
 
 
 
@@ -142,6 +144,7 @@
 			}).catch(done);
 		});
 	});
+
 
 
 
@@ -190,7 +193,7 @@
 			}).catch(done);
 		});
 
-		it('Filtering by fucntion', function(done) {
+		it('Filtering by function', function(done) {
 			db.venue('*')
 			.restrict({
 				created: [{
