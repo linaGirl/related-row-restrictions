@@ -22,7 +22,7 @@
                     return [{
                           type: 'constant'
                         , column: 'id_tenant'
-                        , path: 'event'
+                        , path: ['event']
                         , fullPath: 'event.id_tenant'
                         , operator: 'equal'
                         , value: 1
