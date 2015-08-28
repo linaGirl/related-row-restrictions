@@ -35,12 +35,21 @@
 
 
             , getGlobal: function() {
-                return [];
+                return [{
+                          type: 'constant'
+                        , column: 'id_tenant'
+                        , path: null
+                        , fullPath: 'id_tenant'
+                        , operator: 'equal'
+                        , value: 2
+                        , nullable: false
+                        , global: true
+                    }];
             }
         };
 
 
         db.venue('*').fetchEvent('*').restrict(restricitonSet).find().then(function(venues) { 
-            log(venues);
+            log(venues.length);
         }).catch(log);
     }).catch(log);
