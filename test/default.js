@@ -151,15 +151,35 @@
 
 	describe('Querying', function() {
 		it('Filtering by variable', function(done) {
+
+	        var restricitonSet = {
+	            get: function(entityName) {
+
+	                if (entityName === 'event') {
+	                    return [{
+	                          type: 'variable'
+	                        , column: 'id_tenant'
+	                        , path: null
+	                        , fullPath: 'id_tenant'
+	                        , operator: 'equal'
+	                        , value: 'tenantId'
+	                        , nullable: false
+	                        , global: false
+	                    }];
+	                } 
+	                else return [];
+	            }
+
+
+	            , getGlobal: function() {
+	                return [];
+	            }
+	        };
+
+
 			db.event('*')
 			.setRestrictionVariable('tenantId', 1)
-			.restrict({
-				id_tenant: [{
-					  type: 'variable'
-					, operator: 'equal'
-					, value: 'tenantId'
-				}]
-			}).find().then(function(events) {
+			.setRestrictions(restricitonSet).find().then(function(events) {
 				assert(events.length > 10);
 
 				if (events.some(function(evt) {
@@ -172,16 +192,34 @@
 		});
 
 		it('Filtering by variable (nullable)', function(done) {
+			var restricitonSet = {
+	            get: function(entityName) {
+
+	                if (entityName === 'event') {
+	                    return [{
+	                          type: 'variable'
+	                        , column: 'id_tenant'
+	                        , path: null
+	                        , fullPath: 'id_tenant'
+	                        , operator: 'equal'
+	                        , value: 'tenantId'
+	                        , nullable: true
+	                        , global: false
+	                    }];
+	                } 
+	                else return [];
+	            }
+
+
+	            , getGlobal: function() {
+	                return [];
+	            }
+	        };
+
+
 			db.event('*')
 			.setRestrictionVariable('tenantId', 1)
-			.restrict({
-				id_tenant: [{
-					  type: 'variable'
-					, operator: 'equal'
-					, value: 'tenantId'
-					, nullable: true
-				}]
-			}).find().then(function(events) {
+			.setRestrictions(restricitonSet).find().then(function(events) {
 				assert(events.length > 30);
 
 				if (events.some(function(evt) {
@@ -194,14 +232,32 @@
 		});
 
 		it('Filtering by function', function(done) {
+			var restricitonSet = {
+	            get: function(entityName) {
+
+	                if (entityName === 'venue') {
+	                    return [{
+	                          type: 'function'
+	                        , column: 'created'
+	                        , path: null
+	                        , fullPath: 'created'
+	                        , operator: 'lt'
+	                        , value: 'now()'
+	                        , nullable: false
+	                        , global: false
+	                    }];
+	                } 
+	                else return [];
+	            }
+
+
+	            , getGlobal: function() {
+	                return [];
+	            }
+	        };
+
 			db.venue('*')
-			.restrict({
-				created: [{
-					  type: 'function'
-					, operator: 'lt'
-					, value: 'now()'
-				}]
-			}).find().then(function(venues) {
+			.setRestrictions(restricitonSet).find().then(function(venues) {
 				assert(venues.length === 19);
 
 				done();
@@ -209,15 +265,33 @@
 		});
 
 		it('Filtering by constant (nullable)', function(done) {
+			var restricitonSet = {
+	            get: function(entityName) {
+
+	                if (entityName === 'event') {
+	                    return [{
+	                          type: 'constant'
+	                        , column: 'id_tenant'
+	                        , path: null
+	                        , fullPath: 'id_tenant'
+	                        , operator: 'equal'
+	                        , value: 1
+	                        , nullable: true
+	                        , global: false
+	                    }];
+	                } 
+	                else return [];
+	            }
+
+
+	            , getGlobal: function() {
+	                return [];
+	            }
+	        };
+
+
 			db.event('*')
-			.restrict({
-				id_tenant: [{
-					  type: 'constant'
-					, operator: 'equal'
-					, value: 1
-					, nullable: true
-				}]
-			}).find().then(function(events) {
+			.setRestrictions(restricitonSet).find().then(function(events) {
 				assert(events.length > 30);
 
 				if (events.some(function(evt) {
@@ -231,15 +305,79 @@
 
 
 		it('Filtering by constant (nullable) on another entity', function(done) {
+
+			var restricitonSet = {
+	            get: function(entityName) {
+
+	                if (entityName === 'venue') {
+	                    return [{
+	                          type: 'constant'
+	                        , column: 'id_tenant'
+	                        , path: ['event']
+	                        , fullPath: 'event.id_tenant'
+	                        , operator: 'equal'
+	                        , value: 1
+	                        , nullable: true
+	                        , global: false
+	                    }];
+	                } 
+	                else return [];
+	            }
+
+
+	            , getGlobal: function() {
+	                return [];
+	            }
+	        };
+
 			db.venue('*').fetchEvent('*')
-			.restrict({
-				'event.id_tenant': [{
-					  type: 'constant'
-					, operator: 'equal'
-					, value: 1
-					, nullable: true
-				}]
-			}).find().then(function(venues) {
+			.setRestrictions(restricitonSet).find().then(function(venues) {
+
+				// cant test this one... 
+				done();
+			}).catch(done);
+		});
+
+
+		it('Filtering by constant (nullable) on another entity and one on the local entity that is global', function(done) {
+
+
+			var restricitonSet = {
+	            get: function(entityName) {
+
+	                if (entityName === 'venue') {
+	                    return [{
+	                          type: 'constant'
+	                        , column: 'id_tenant'
+	                        , path: ['event']
+	                        , fullPath: 'event.id_tenant'
+	                        , operator: 'equal'
+	                        , value: 1
+	                        , nullable: true
+	                        , global: false
+	                    }];
+	                } 
+	                else return [];
+	            }
+
+
+	            , getGlobal: function() {
+	                return [{
+	                          type: 'constant'
+	                        , column: 'id_tenant'
+	                        , path: null
+	                        , fullPath: 'id_tenant'
+	                        , operator: 'equal'
+	                        , value: 1
+	                        , nullable: true
+	                        , global: true
+	                    }];
+	            }
+	        };
+
+
+			db.venue('*').fetchEvent('*')
+			.setRestrictions(restricitonSet).find().then(function(venues) {
 
 				if (venues.some(function(venue) {
 					return venue.event.some(function(evt) {
@@ -251,33 +389,46 @@
 				done();
 			}).catch(done);
 		});
+	});
+	
 
 
-		it('Filtering by constant (nullable) on another entity and one on the local entity that is global', function(done) {
-			db.venue('*').fetchEvent('*')
-			.restrict({
-				'event.id_tenant': [{
-					  type: 'constant'
-					, operator: 'equal'
-					, value: 1
-					, nullable: true
-				}]
-				, id_tenant: [{
-					  type: 'constant'
-					, operator: 'equal'
-					, value: 1
-					, global: true
-					, nullable: false
-				}]
-			}).find().then(function(venues) {
 
-				if (venues.some(function(venue) {
-					return venue.event.some(function(evt) {
-						return evt.id_tenant !== 1 && evt.id_tenant !== null;
-					});
-				})) {
-					throw new Error('invalid tenant id!');
-				}
+
+
+
+	describe('Inserting', function() {
+		it('Using a variable', function(done) {
+
+	        var restricitonSet = {
+	            get: function(entityName) {
+
+	                if (entityName === 'event') {
+	                    return [{
+	                          type: 'variable'
+	                        , column: 'id_tenant'
+	                        , path: null
+	                        , fullPath: 'id_tenant'
+	                        , operator: 'equal'
+	                        , value: 'tenantId'
+	                        , nullable: false
+	                        , global: false
+	                    }];
+	                } 
+	                else return [];
+	            }
+
+
+	            , getGlobal: function() {
+	                return [];
+	            }
+	        };
+
+
+			new db.event({name: 'tenant_test'})
+			.setRestrictionVariable('tenantId', 1)
+			.setRestrictions(restricitonSet).save().then(function(event) {
+				assert.deepEqual(event.toJSON(), { id: 101, id_tenant: 1, id_venue: null, name: 'tenant_test' });
 				done();
 			}).catch(done);
 		});

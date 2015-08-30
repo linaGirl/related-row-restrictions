@@ -49,7 +49,7 @@
         };
 
 
-        db.venue('*').fetchEvent('*').restrict(restricitonSet).find().then(function(venues) { 
+        db.venue('*').fetchEvent('*').setRestrictions(restricitonSet).find().then(function(venues) { 
             log(venues.length);
         }).catch(log);
     }).catch(log);
