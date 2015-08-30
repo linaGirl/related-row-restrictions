@@ -161,7 +161,7 @@
 	                        , column: 'id_tenant'
 	                        , path: null
 	                        , fullPath: 'id_tenant'
-	                        , operator: 'equal'
+	                        , comperator: 'equal'
 	                        , value: 'tenantId'
 	                        , nullable: false
 	                        , global: false
@@ -201,7 +201,7 @@
 	                        , column: 'id_tenant'
 	                        , path: null
 	                        , fullPath: 'id_tenant'
-	                        , operator: 'equal'
+	                        , comperator: 'equal'
 	                        , value: 'tenantId'
 	                        , nullable: true
 	                        , global: false
@@ -241,7 +241,7 @@
 	                        , column: 'created'
 	                        , path: null
 	                        , fullPath: 'created'
-	                        , operator: 'lt'
+	                        , comperator: 'lt'
 	                        , value: 'now()'
 	                        , nullable: false
 	                        , global: false
@@ -274,7 +274,7 @@
 	                        , column: 'id_tenant'
 	                        , path: null
 	                        , fullPath: 'id_tenant'
-	                        , operator: 'equal'
+	                        , comperator: 'equal'
 	                        , value: 1
 	                        , nullable: true
 	                        , global: false
@@ -315,7 +315,7 @@
 	                        , column: 'id_tenant'
 	                        , path: ['event']
 	                        , fullPath: 'event.id_tenant'
-	                        , operator: 'equal'
+	                        , comperator: 'equal'
 	                        , value: 1
 	                        , nullable: true
 	                        , global: false
@@ -351,7 +351,7 @@
 	                        , column: 'id_tenant'
 	                        , path: ['event']
 	                        , fullPath: 'event.id_tenant'
-	                        , operator: 'equal'
+	                        , comperator: 'equal'
 	                        , value: 1
 	                        , nullable: true
 	                        , global: false
@@ -367,7 +367,7 @@
 	                        , column: 'id_tenant'
 	                        , path: null
 	                        , fullPath: 'id_tenant'
-	                        , operator: 'equal'
+	                        , comperator: 'equal'
 	                        , value: 1
 	                        , nullable: true
 	                        , global: true
@@ -409,7 +409,7 @@
 	                        , column: 'id_tenant'
 	                        , path: null
 	                        , fullPath: 'id_tenant'
-	                        , operator: 'equal'
+	                        , comperator: 'equal'
 	                        , value: 'tenantId'
 	                        , nullable: false
 	                        , global: false
