@@ -1,7 +1,7 @@
 {
       "name"                        : "related-row-restrictions"
     , "description"                 : "Enforce filters on queries"
-    , "version"                     : "0.1.13"
+    , "version"                     : "1.0.0"
     , "homepage"                    : "https://github.com/eventEmitter/related-row-restrictions"
     , "author"                      : "Michael van der Weg <michael@joinbox.com> (http://joinbox.com/)"
     , "license"                     : "MIT"
@@ -17,13 +17,13 @@
     }
     , "dependencies": {
           "ee-class"                : "1.x"
-        , "ee-types"                : "1.x"
+        , "ee-types"                : "2.x"
+        , "related-extension"       : "1.x"
         , "ee-event-emitter"        : "0.3.x"
         , "ee-log"                  : "0.3.x"
-        , "related-extension"       : "0.4.x"
     }
     , "devDependencies": {
-          "mocha"                   : "1.17.x"
+          "mocha"                   : "2.x"
         , "related"                 : "*"
     }
     , "optionalDependencies": {}

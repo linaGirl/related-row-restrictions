@@ -41,8 +41,6 @@
 						, username 	: 'postgres'
 						, password 	: ''
 						, port 		: 5432
-						, mode 		: 'readwrite'
-						, database 	: 'test'
 					}]
 				}];
 			}
@@ -52,6 +50,13 @@
 			related.load(done);
 		});
 
+
+		it('should have set up the test db', function(done) {
+			related.related_restrictions_test.event().delete().then(() => {
+				return related.related_restrictions_test.venue().delete();
+			}).then(() => done()).catch(done);
+		});
+/*
 		it('should be able to drop & create the testing schema ('+sqlStatments.length+' raw SQL queries)', function(done) {
 			related.getDatabase('related_restrictions_test').getConnection(function(err, connection) {
 				if (err) done(err);
@@ -68,7 +73,7 @@
 					}).catch(done)
 				}//async.each(sqlStatments, connection.queryRaw.bind(connection), done);
 			});
-		});
+		});*/
 	});
 
 
@@ -125,18 +130,23 @@
 
 			this.timeout(10000);
 
+			const ids = [];
+
 			Promise.all(Array.apply(null, {length:100}).map(function(item, index) {
 				return new db.venue({
 					  id_tenant 	: index > 80 ? 1 : index > 50 ? 2 : 3
 					, name 		 	: 'event_'+index
 					, created 		: index > 80 ? new Date(1983, 9 ,2 ,7 ,30, 0) : new Date(2083, 9 ,2 ,7 ,30, 0)
-				}).save();
+				}).save().then((venue) => {
+					ids.push(venue.id);
+					return Promise.resolve();
+				});
 			})).then(function() {
 				return Promise.all(Array.apply(null, {length:100}).map(function(item, idx) {
 					return new db.event({
 						  name 		: 'event_'+idx
 						, id_tenant : idx > 80 ? 1 : idx > 50 ? 2 : null
-						, id_venue  : Math.ceil(Math.random()*100)
+						, id_venue  : ids[Math.ceil(Math.random()*100)]
 					}).save();
 				}));
 			}).then(function() {
@@ -158,16 +168,15 @@
 	                if (entityName === 'event') {
 	                    return [{
 	                          type: 'variable'
-	                        , column: 'id_tenant'
+	                        , property: 'id_tenant'
 	                        , path: null
 	                        , fullPath: 'id_tenant'
-	                        , comperator: 'equal'
+	                        , comparator: 'equal'
 	                        , value: 'tenantId'
 	                        , nullable: false
 	                        , global: false
 	                    }];
-	                } 
-	                else return [];
+	                } else return [];
 	            }
 
 
@@ -198,15 +207,15 @@
 	                if (entityName === 'event') {
 	                    return [{
 	                          type: 'variable'
-	                        , column: 'id_tenant'
+	                        , property: 'id_tenant'
 	                        , path: null
 	                        , fullPath: 'id_tenant'
-	                        , comperator: 'equal'
+	                        , comparator: 'equal'
 	                        , value: 'tenantId'
 	                        , nullable: true
 	                        , global: false
 	                    }];
-	                } 
+	                }
 	                else return [];
 	            }
 
@@ -238,15 +247,15 @@
 	                if (entityName === 'venue') {
 	                    return [{
 	                          type: 'function'
-	                        , column: 'created'
+	                        , property: 'created'
 	                        , path: null
 	                        , fullPath: 'created'
-	                        , comperator: 'lt'
+	                        , comparator: 'lt'
 	                        , value: 'now()'
 	                        , nullable: false
 	                        , global: false
 	                    }];
-	                } 
+	                }
 	                else return [];
 	            }
 
@@ -271,15 +280,15 @@
 	                if (entityName === 'event') {
 	                    return [{
 	                          type: 'constant'
-	                        , column: 'id_tenant'
+	                        , property: 'id_tenant'
 	                        , path: null
 	                        , fullPath: 'id_tenant'
-	                        , comperator: 'equal'
+	                        , comparator: 'equal'
 	                        , value: 1
 	                        , nullable: true
 	                        , global: false
 	                    }];
-	                } 
+	                }
 	                else return [];
 	            }
 
@@ -312,15 +321,15 @@
 	                if (entityName === 'venue') {
 	                    return [{
 	                          type: 'constant'
-	                        , column: 'id_tenant'
+	                        , property: 'id_tenant'
 	                        , path: ['event']
 	                        , fullPath: 'event.id_tenant'
-	                        , comperator: 'equal'
+	                        , comparator: 'equal'
 	                        , value: 1
 	                        , nullable: true
 	                        , global: false
 	                    }];
-	                } 
+	                }
 	                else return [];
 	            }
 
@@ -333,7 +342,7 @@
 			db.venue('*').fetchEvent('*')
 			.setRestrictions(restricitonSet).find().then(function(venues) {
 
-				// cant test this one... 
+				// cant test this one...
 				done();
 			}).catch(done);
 		});
@@ -348,15 +357,15 @@
 	                if (entityName === 'venue') {
 	                    return [{
 	                          type: 'constant'
-	                        , column: 'id_tenant'
+	                        , property: 'id_tenant'
 	                        , path: ['event']
 	                        , fullPath: 'event.id_tenant'
-	                        , comperator: 'equal'
+	                        , comparator: 'equal'
 	                        , value: 1
 	                        , nullable: true
 	                        , global: false
 	                    }];
-	                } 
+	                }
 	                else return [];
 	            }
 
@@ -364,10 +373,10 @@
 	            , getGlobal: function() {
 	                return [{
 	                          type: 'constant'
-	                        , column: 'id_tenant'
+	                        , property: 'id_tenant'
 	                        , path: null
 	                        , fullPath: 'id_tenant'
-	                        , comperator: 'equal'
+	                        , comparator: 'equal'
 	                        , value: 1
 	                        , nullable: true
 	                        , global: true
@@ -390,7 +399,7 @@
 			}).catch(done);
 		});
 	});
-	
+
 
 
 
@@ -406,15 +415,15 @@
 	                if (entityName === 'event') {
 	                    return [{
 	                          type: 'variable'
-	                        , column: 'id_tenant'
+	                        , property: 'id_tenant'
 	                        , path: null
 	                        , fullPath: 'id_tenant'
-	                        , comperator: 'equal'
+	                        , comparator: 'equal'
 	                        , value: 'tenantId'
 	                        , nullable: false
 	                        , global: false
 	                    }];
-	                } 
+	                }
 	                else return [];
 	            }
 
@@ -428,7 +437,9 @@
 			new db.event({name: 'tenant_test'})
 			.setRestrictionVariable('tenantId', 1)
 			.setRestrictions(restricitonSet).save().then(function(event) {
-				assert.deepEqual(event.toJSON(), { id: 101, id_tenant: 1, id_venue: null, name: 'tenant_test' });
+				assert.equal(event.id_tenant, 1);
+				assert.equal(event.id_venue, null);
+				assert.equal(event.name, 'tenant_test');
 				done();
 			}).catch(done);
 		});
