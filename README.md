@@ -1,5 +1,7 @@
 # related-row-restrictions
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/eventEmitter/related-row-restrictions.svg)](https://greenkeeper.io/)
+
 This is an extension for the [related orm](https://www.npmjs.com/package/related)
 
 This extensions adds the «restrict» method to the queryBuilder. That method accepts
